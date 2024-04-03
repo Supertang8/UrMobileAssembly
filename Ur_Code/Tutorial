@@ -12,3 +12,5 @@ Set-ExecutionPolicy Unrestricted -Scope Process
 
     raspberryPI:
 source .venv/Scripts/activate
+
+PULL/PUSH TEESTT! woooo1!
