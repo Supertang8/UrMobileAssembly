@@ -1,0 +1,8 @@
+--How to enter virtul environment: 
+
+    WINDOWS:
+Set-ExecutionPolicy Unrestricted -Scope Process
+Ur_Code\.venv\Scripts\activate
+
+    raspberryPI:
+source .venv/Scripts/activate
