@@ -1,0 +1,73 @@
+<body>
+    <h1>Phone Order GUI</h1>
+    
+    <style></style>
+    <form id="orderForm">
+        <label for="topCoverColor">Top Cover Color:</label>
+        <select id="topCoverColor" name="topCoverColor" onchange="updatePhonePreview()">
+            <option value="black">Black</option>
+            <option value="white">White</option>
+            <option value="blue">Blue</option>
+        </select>
+
+        <label for="bottomCoverColor">Bottom Cover Color:</label>
+        <select id="bottomCoverColor" name="bottomCoverColor" onchange="updatePhonePreview()">
+            <option value="black">Black</option>
+            <option value="white">White</option>
+            <option value="blue">Blue</option>
+        </select>
+
+        <label for="fuses">Fuses:</label>
+        <select id="fuses" name="fuses" onchange="updatePhonePreview()">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+
+        <button type="submit">Add to Order</button>
+    </form>
+
+    <img id="phonePreview" src="" alt="Phone Preview" style="width: 500px; height: auto; background-color: gray;">
+
+    <h2>Order List</h2>
+    <ul id="orderList"></ul>
+
+
+    <script>
+        // Add your JavaScript code here
+
+        const orderForm = document.getElementById('orderForm');
+        const orderList = document.getElementById('orderList');
+        const phonePreview = document.getElementById('phonePreview');
+
+        orderForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const topCoverColor = document.getElementById('topCoverColor').value;
+            const bottomCoverColor = document.getElementById('bottomCoverColor').value;
+            const fuses = document.getElementById('fuses').value;
+
+            const orderItem = document.createElement('li');
+            orderItem.textContent = `Top Cover Color: ${topCoverColor}, Bottom Cover Color: ${bottomCoverColor}, Fuses: ${fuses}`;
+
+            orderList.appendChild(orderItem);
+
+            // Send the order data to the database
+            // Add your code to send the data to the database here
+        });
+
+        function updatePhonePreview() {
+            const topCoverColor = document.getElementById('topCoverColor').value;
+            const bottomCoverColor = document.getElementById('bottomCoverColor').value;
+            const fuses = document.getElementById('fuses').value;
+
+            // Update the phone preview image based on the selected options
+            phonePreview.src = getPhonePreviewImage(topCoverColor, bottomCoverColor, fuses);
+        }
+
+        function getPhonePreviewImage(topCoverColor, bottomCoverColor, fuses) {
+            // Replace the URL with the actual path to your photos
+            const photoPath = `/My Drive/AAU/2 Semester/P2/GUI/combos/${topCoverColor}_${bottomCoverColor}_${fuses}.png`;
+            return photoPath;
+        }
+    </script>
