@@ -6,6 +6,9 @@ Simon,
 Nina,
 Vithuran,
 
+Dlink accespoint
+User:   admin
+Pw      blank
 
 Raspberry pi:
 ip:     192.168.0.105
