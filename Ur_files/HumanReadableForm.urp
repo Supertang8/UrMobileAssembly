@@ -1,0 +1,90 @@
+<URProgram createdIn="3.2.19275.0" lastSavedIn="3.6.1.30595" robotSerialNumber="2014359999" name="rtde_control_loop" directory="/home/ur/ursim-current/programs" installation="default" crcValue="2588156642">
+  <children>
+    <!-- SpecialSequence for initialization -->
+    <SpecialSequence type="BeforeStart">
+      <children>
+        <!-- Initialize 'setp' variable -->
+        <Assignment valueSource="Expression">
+          <variable name="setp" prefersPersistentValue="false">
+            <initializeExpression>[0, 0, 0, 0, 0, 0]</initializeExpression>
+          </variable>
+        </Assignment>
+        <!-- Script to set up RTDE communication -->
+        <Script type="Line">
+          <expression>rtde_set_watchdog("input_int_register_0", 1, "PAUSE")</expression>
+        </Script>
+        <!-- Write output to input register -->
+        <Script type="Line">
+          <expression>write_output_integer_register(0, 1)</expression>
+        </Script>
+      </children>
+    </SpecialSequence>
+    
+    <!-- MainProgram loop -->
+    <MainProgram runOnlyOnce="false" motionType="MoveJ" speed="1.0471975511965976" acceleration="1.3962634015954636" useActiveTCP="false">
+      <children>
+        <!-- If valid pose received -->
+        <If type="If" checkContinuously="false">
+          <expression>read_input_integer_register(0) != setp</expression>
+          <children>
+            <!-- Move robot to received pose -->
+            <Move motionType="MoveL" speed="0.08" acceleration="1.2" useActiveTCP="false">
+              <feature class="GeomFeatureReference" referencedName="Joint_0_name"/>
+              <children>
+                <Waypoint type="Variable" name="Waypoint" kinematicsFlags="-1">
+                  <motionParameters/>
+                  <variable reference="../../../../../../../../SpecialSequence/children/Assignment/variable"/>
+                </Waypoint>
+              </children>
+            </Move>
+            <!-- Confirm move execution -->
+            <Script type="Line">
+              <expression>write_output_integer_register(0, 1)</expression>
+            </Script>
+            <!-- Wait until confirmation -->
+            <Loop type="While" checkContinuously="false">
+              <expression>read_input_integer_register(0) != 1</expression>
+              <children>
+                <Script type="Line">
+                  <expression>sync()</expression>
+                </Script>
+              </children>
+            </Loop>
+            <!-- Request next pose -->
+            <Script type="Line">
+              <expression>write_output_integer_register(0, 1)</expression>
+            </Script>
+          </children>
+        </If>
+        <!-- Signal success -->
+        <Script type="Line">
+          <expression>sync()</expression>
+        </Script>
+      </children>
+    </MainProgram>
+    
+    <!-- Thread for continuous reading -->
+    <Thread name="Thread_1" runOnlyOnce="false" trackProgramExecution="false">
+      <children>
+        <!-- Loop for continuous reading -->
+        <Loop type="Forever">
+          <children>
+            <!-- Read input data -->
+            <Assignment valueSource="Expression">
+              <variable name="tmp" prefersPersistentValue="false">
+                <initializeExpression>[0, 0, 0, 0, 0, 0]</initializeExpression>
+              </variable>
+            </Assignment>
+            <Script type="Line">
+              <expression>read_input_integer_register(0, tmp)</expression>
+            </Script>
+            <!-- Signal success -->
+            <Script type="Line">
+              <expression>sync()</expression>
+            </Script>
+          </children>
+        </Loop>
+      </children>
+    </Thread>
+  </children>
+</URProgram>
