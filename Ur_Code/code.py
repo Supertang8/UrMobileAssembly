@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("..")
-import logging
+#import logging
 
 import rtde.rtde as rtde
 import rtde.rtde_config as rtde_config
@@ -12,19 +12,13 @@ from find_positions import top_cover_pos, top_cover_approach, bottom_cover_pos, 
 
 # logging.basicConfig(level=logging.INFO)
 
-#ROBOT_HOST = "169.254.141.137"
 ROBOT_HOST = "192.168.0.104"
 ROBOT_PORT = 30004
 config_filename = "control_loop_configuration.xml"
 
 keep_running = True
 
-logging.getLogger().setLevel(logging.INFO)
-
-print("bottom cover point:")
-print(bottom_cover_pos)
-print("bottom cover approach:")
-print(bottom_cover_approach)
+#logging.getLogger().setLevel(logging.INFO)
 
 conf = rtde_config.ConfigFile(config_filename)
 state_names, state_types = conf.get_recipe("state")
@@ -43,10 +37,6 @@ con.send_output_setup(state_names, state_types)
 setp = con.send_input_setup(setp_names, setp_types)
 watchdog = con.send_input_setup(watchdog_names, watchdog_types)
 gripper = con.send_input_setup(gripper_names, gripper_types)
-
-# Setpoints to move the robot to
-setp1 = [-0.12, -0.43, 0.14, 0, 3.11, 0.04]
-setp2 = [0.116, -0.539, 0.39, 0.916, -2.433, -0.097]
 
 end_pos = [-0.12, -0.43, 0.14, 0, 3.11, 0.04]
 
@@ -77,58 +67,45 @@ def list_to_setp(sp, list):
     return sp
 
 def grab(id): # 0=close, 1=small, 2=large
-    #gripper.standard_digital_output_mask = 0b01100000 #Set digital output 5 and 6 to LOW.
-    #gripper.standard_digital_output = 0b10011111 
-    #con.send(gripper)
-    gripper.standard_digital_output_mask = 0b01111000
+    gripper.standard_digital_output_mask = 0b01111000 #Mask the 4 digital outputs we are changing.
     if(id == 2): 
-        #gripper.standard_digital_output_mask = 0b00100000 #close gripper, set digital output 6 to HIGH
+        #Start large suction, set digital output 6 to HIGH
         gripper.standard_digital_output = 0b00100000 
     elif(id == 1): 
-        #gripper.standard_digital_output_mask = 0b00100000 #close gripper, set digital output 6 to HIGH
+        #Start small suction, set digital output 8 to HIGH
         gripper.standard_digital_output = 0b10000000 
     else:
-        #gripper.standard_digital_output_mask = 0b01000000 #open gripper, set digital output 5 to HIGH
+        ##Stop all suction, set digital output 5 and 7 to HIGH
         gripper.standard_digital_output = 0b01010000 
-    #gripper.standard_digital_output = 0b11111111 
     con.send(gripper)
 
 def order_to_queue(order):
     queue = []
 
-    '''queue.append(top_cover_approach[0])
-    queue.append(top_cover_approach[1])
-    queue.append(top_cover_approach[2])
-    queue.append(bottom_cover_approach[0])
-    queue.append(bottom_cover_approach[1])
-    queue.append(bottom_cover_approach[2])
-    queue.append(pcb_approach)
-
-    return queue'''
-
     if order[0] != 0: #if the order contains at least one fuse
         queue.append(fuse_approach[order[0]-1])
         queue.append(fuse_pos[order[0]-1])
-        queue.append("s")
+        queue.append("s") #small suction cup
         queue.append(fuse_approach[order[0]-1])
+
     queue.append(pcb_approach)
     queue.append(pcb_pos)
-    queue.append("l")
+    queue.append("l") #large suction cup
     queue.append(pcb_approach)
     queue.append(bottom_cover_approach[order[1]])
     queue.append(bottom_cover_drop[order[1]])
-    queue.append("r")
+    queue.append("r") #release
     queue.append(bottom_cover_approach[order[1]])
     queue.append(top_cover_approach[order[2]])
     queue.append(top_cover_pos[order[2]])
-    queue.append("l")
+    queue.append("l") #large suction cup
     queue.append(top_cover_approach[order[2]])
     queue.append(bottom_cover_approach[order[1]])
     queue.append(bottom_cover_pos[order[1]])
     queue.append(bottom_cover_approach[order[1]])
     queue.append(bottom_cover_approach[0])
     queue.append(bottom_cover_pos[0])
-    queue.append("r")
+    queue.append("r") #release
     queue.append(bottom_cover_approach[0])
 
     return queue
@@ -148,7 +125,7 @@ current_task = 0
 if not con.send_start():
     sys.exit()
 
-# control loop
+# ---------- control loop ---------- #
 move_completed = True
 while True:
     # receive the current state
@@ -177,36 +154,10 @@ while True:
         move_completed = True
         watchdog.input_int_register_0 = 0
 
-    if current_task > len(queue):
+    if current_task >= len(queue):
         break
 
     con.send(watchdog)
 
-    '''# do something...
-    if move_completed and state.output_int_register_0 == 1:
-
-        move_completed = False
-
-        if setp_to_list(setp) == setp2:
-            new_setp = setp1
-            grab(True)
-        else:
-            new_setp = setp2
-            grab(False)
-        list_to_setp(setp, new_setp)
-        print("New pose = " + str(new_setp))
-        # send new setpoint
-        con.send(setp)
-        watchdog.input_int_register_0 = 1
-
-    elif not move_completed and state.output_int_register_0 == 0:
-        print("Move to confirmed pose = " + str(state.target_q))
-        move_completed = True
-        watchdog.input_int_register_0 = 0
-
-    # kick watchdog
-    con.send(watchdog)'''
-
 con.send_pause()
-
 con.disconnect()
