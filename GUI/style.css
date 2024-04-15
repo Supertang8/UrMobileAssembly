@@ -1,0 +1,54 @@
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: sandybrown; /* Replace with your desired sand color */
+    margin: 200px;
+    margin-top: 20px;
+}
+/* Order table styles */
+table {
+    border-collapse: collapse;
+    width: 90%;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table td, table th {
+    border: 1px solid black;
+    padding: 2px;
+    text-align: center;
+    background-color: white;
+}
+
+
+table th {
+    background-color: gray;
+    text-align: center;
+    padding: 8px;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.orderFormElement {
+    margin-right: 10px;
+    margin-left: 10px;
+    flex: 1;
+    border-right: 2px solid black;
+}
+
+.orderListElement {
+    margin-right: 10px;
+    margin-left: 10px;
+    flex: 1;
+}
+
+.preview {
+    width: 90%;
+    height: auto;
+    background-color: gray;
+}
+

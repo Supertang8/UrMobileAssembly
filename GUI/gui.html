@@ -1,56 +1,97 @@
 <body>
     <h1>Phone Order GUI</h1>
-    
+    <link rel="stylesheet" href="style.css">
     <style></style>
-    <form id="orderForm">
-        <label for="topCoverColor">Top Cover Color:</label>
-        <select id="topCoverColor" name="topCoverColor" onchange="updatePhonePreview()">
-            <option value="black">Black</option>
-            <option value="white">White</option>
-            <option value="blue">Blue</option>
-        </select>
+    <hr>
 
-        <label for="bottomCoverColor">Bottom Cover Color:</label>
-        <select id="bottomCoverColor" name="bottomCoverColor" onchange="updatePhonePreview()">
-            <option value="black">Black</option>
-            <option value="white">White</option>
-            <option value="blue">Blue</option>
-        </select>
-
-        <label for="fuses">Fuses:</label>
-        <select id="fuses" name="fuses" onchange="updatePhonePreview()">
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-        </select>
-
-        <button type="submit">Add to Order</button>
-    </form>
-
-    <img id="phonePreview" src="" alt="Phone Preview" style="width: 500px; height: auto; background-color: gray;">
-
-    <h2>Order List</h2>
-    <ul id="orderList"></ul>
+    <div class="container">
+        <div class="orderFormElement">
+            <h2>Choose your options:</h2>
+            <form id="orderForm">
+                <label for="topCoverColor">Top Color:</label>
+                <select id="topCoverColor" name="topCoverColor" onchange="updatePhonePreview()">
+                    <option value="black" selected>Black</option>
+                    <option value="white">White</option>
+                    <option value="blue">Blue</option>
+                </select>
+        
+                <label for="bottomCoverColor">Bottom Color:</label>
+                <select id="bottomCoverColor" name="bottomCoverColor" onchange="updatePhonePreview()">
+                    <option value="black" selected>Black </option>
+                    <option value="white">White</option>
+                    <option value="blue">Blue</option>
+                </select>
+        
+                <label for="fuses">Fuses:</label>
+                <select id="fuses" name="fuses" onchange="updatePhonePreview()">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                </select>
+        
+                <button type="submit">Add to Order</button>
+            </form>
+        
+            <img class="preview" id="phonePreview" src="" alt="Phone Preview">
+        </div>
+        <div class="orderListElement">       
+            <h2>Order List</h2>
+            <button id="deleteOrderListButton" onclick="deleteOrderList()">Delete Order List</button>
+            <button id="deleteLastPhoneButton" onclick="deleteLastPhone()">Delete Last Phone</button>
+            <table id="orderTable">
+                <thead>
+                    <tr>
+                        <th>Phone Number</th>
+                        <th>Top Color</th>
+                        <th>Bottom Color</th>
+                        <th>Fuses</th>
+                    </tr>
+                </thead>
+                <tbody id="orderListTableBody"></tbody>
+            </table>
+         </div>
+    </div>
 
 
     <script>
         // Add your JavaScript code here
 
+
         const orderForm = document.getElementById('orderForm');
-        const orderList = document.getElementById('orderList');
+        const orderListTableBody = document.getElementById('orderListTableBody');
         const phonePreview = document.getElementById('phonePreview');
+
+        let phoneNumber = 1;
 
         orderForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const topCoverColor = document.getElementById('topCoverColor').value;
-            const bottomCoverColor = document.getElementById('bottomCoverColor').value;
-            const fuses = document.getElementById('fuses').value;
+            if (orderListTableBody.children.length < 5) {
+                const topCoverColor = document.getElementById('topCoverColor').value;
+                const bottomCoverColor = document.getElementById('bottomCoverColor').value;
+                const fuses = document.getElementById('fuses').value;
 
-            const orderItem = document.createElement('li');
-            orderItem.textContent = `Top Cover Color: ${topCoverColor}, Bottom Cover Color: ${bottomCoverColor}, Fuses: ${fuses}`;
+                const orderRow = document.createElement('tr');
+                const phoneNumberCell = document.createElement('td');
+                const topCoverColorCell = document.createElement('td');
+                const bottomCoverColorCell = document.createElement('td');
+                const fusesCell = document.createElement('td');
 
-            orderList.appendChild(orderItem);
+                phoneNumberCell.textContent = phoneNumber;
+                topCoverColorCell.textContent = topCoverColor;
+                bottomCoverColorCell.textContent = bottomCoverColor;
+                fusesCell.textContent = fuses;
+
+                orderRow.appendChild(phoneNumberCell);
+                orderRow.appendChild(topCoverColorCell);
+                orderRow.appendChild(bottomCoverColorCell);
+                orderRow.appendChild(fusesCell);
+
+                orderListTableBody.appendChild(orderRow);
+
+                phoneNumber++;
+            }
+            
 
             // Send the order data to the database
             // Add your code to send the data to the database here
@@ -70,4 +111,22 @@
             const photoPath = `/My Drive/AAU/2 Semester/P2/GUI/combos/${topCoverColor}_${bottomCoverColor}_${fuses}.png`;
             return photoPath;
         }
+
+        function deleteOrderList() {
+            orderListTableBody.innerHTML = "";
+            phoneNumber = 1;
+        }
+
+        function deleteLastPhone() {
+            const lastEntry = orderListTableBody.lastElementChild;
+            if (lastEntry) {
+                orderListTableBody.removeChild(lastEntry);
+                // Decrement phoneNumber if needed
+                phoneNumber--;
+            }
+        }
+
+        window.onload = updatePhonePreview;
+
     </script>
+</body>
