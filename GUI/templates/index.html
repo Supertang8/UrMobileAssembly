@@ -88,14 +88,30 @@
                 orderRow.appendChild(fusesCell);
 
                 orderListTableBody.appendChild(orderRow);
+                console.log(getOrderListAsArray()); 
 
                 phoneNumber++;
             }
             
-
-            // Send the order data to the database
-            // Add your code to send the data to the database here
         });
+
+        function getOrderListAsArray() {
+            const orderListArray = [];
+            const rows = orderListTableBody.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const rowData = [];
+                const cells = row.querySelectorAll('td');
+
+                cells.forEach(cell => {
+                    rowData.push(cell.textContent);
+                });
+
+                orderListArray.push(rowData);
+            });
+
+            return orderListArray;
+        }
 
         function updatePhonePreview() {
             const topCoverColor = document.getElementById('topCoverColor').value;
@@ -125,6 +141,7 @@
                 phoneNumber--;
             }
         }
+    
 
         window.onload = updatePhonePreview;
 
