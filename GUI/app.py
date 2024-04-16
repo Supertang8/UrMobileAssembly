@@ -7,14 +7,16 @@ app = Flask(__name__)
 order_list = []
 print("test")
 
-def get_time():
-    return time.time()
+@app.route('/current_time')
+def current_time():
+    info = time.time()
+    return jsonify({'currrent_time': info})
 
 
 # Route to render the index.html template
 @app.route('/')
 def index():
-    return render_template('index.html', time=get_time())
+    return render_template('index.html')
 
 @app.route('/receive_order_list', methods=['POST'])
 def receive_order_list():

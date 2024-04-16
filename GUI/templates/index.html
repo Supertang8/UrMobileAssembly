@@ -36,7 +36,7 @@
         </div>
         <div class="orderListElement">       
             <h2>Order List</h2>
-            <h2>{{time}}</h2>
+            <h2>The current time is : <span id="current-time"></span></h2>
             <button id="deleteOrderListButton" onclick="deleteOrderList()">Delete Order List</button>
             <button id="deleteLastPhoneButton" onclick="deleteLastPhone()">Delete Last Phone</button>
             <button id="sendOrderList" onclick="sendOrderListToServer()">Send order list</button>
@@ -57,6 +57,23 @@
 
     <script>
         // Add your JavaScript code here
+
+
+        function fetchCurrentTime() {
+            fetch('/current_time')
+                .then(response => response.json())
+                .then(data => {
+                    // Update the webpage with the current time
+                    document.getElementById('current-time').textContent = new Date(data.current_time * 1000).toLocaleTimeString();
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Fetch current time when the page loads
+        fetchCurrentTime();
+
+        // Fetch current time periodically (e.g., every second)
+        setInterval(fetchCurrentTime, 50); // Fetch every second
 
 
         const orderForm = document.getElementById('orderForm');
@@ -96,6 +113,8 @@
             }
             
         });
+
+
 
         function sendOrderListToServer() {
             const orderListArray = getOrderListAsArray();
