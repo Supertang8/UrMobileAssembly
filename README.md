@@ -6,6 +6,9 @@ Simon,
 Nina,
 Vithuran,
 
+UR5_264 wifi
+password: 264462....    
+
 Dlink accespoint
 User:   admin
 Pw      blank
