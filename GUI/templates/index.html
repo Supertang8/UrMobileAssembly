@@ -64,7 +64,7 @@
                 .then(response => response.json())
                 .then(data => {
                     // Update the webpage with the current time
-                    document.getElementById('current-time').textContent = new Date(data.current_time * 1000).toLocaleTimeString();
+                    document.getElementById('current-time').textContent = data.current_time;
                 })
                 .catch(error => console.error('Error:', error));
         }
