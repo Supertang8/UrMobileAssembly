@@ -9,10 +9,9 @@ print("test")
 
 @app.route('/current_time')
 def current_time():
-    info = time.time()
-    print("test current time")
-    print(info)
-    return jsonify({'current_time': info})
+    timestamp = time.time()
+    formatted_time = time.strftime('%H:%M:%S', time.localtime(timestamp)) + f":{int((timestamp % 1) * 1000):03d}"
+    return jsonify({'current_time': formatted_time})
 
 
 # Route to render the index.html template
