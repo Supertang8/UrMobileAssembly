@@ -9,7 +9,7 @@ print("test")
 # Route to render the index.html template
 @app.route('/')
 def index():
-    return render_template('index.html', order_list=order_list)
+    return render_template('index.html')
 
 @app.route('/receive_order_list', methods=['POST'])
 def receive_order_list():
