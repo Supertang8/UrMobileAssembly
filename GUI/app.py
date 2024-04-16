@@ -9,6 +9,7 @@ print("test")
 
 @app.route('/current_time')
 def current_time():
+    print("test current time")
     info = time.time()
     return jsonify({'currrent_time': info})
 
