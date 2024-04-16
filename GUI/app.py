@@ -9,9 +9,10 @@ print("test")
 
 @app.route('/current_time')
 def current_time():
-    print("test current time")
     info = time.time()
-    return jsonify({'currrent_time': info})
+    print("test current time")
+    print(info)
+    return jsonify({'current_time': info})
 
 
 # Route to render the index.html template
