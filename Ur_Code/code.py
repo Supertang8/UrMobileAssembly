@@ -40,7 +40,7 @@ setp = con.send_input_setup(setp_names, setp_types)
 watchdog = con.send_input_setup(watchdog_names, watchdog_types)
 gripper = con.send_input_setup(gripper_names, gripper_types)
 
-end_pos = [-0.12, -0.43, 0.14, 0, 3.11, 0.04]
+end_pos = [0.164, -0.400, 0.072, 3.131, 0, 0]
 
 setp.input_double_register_0 = 0
 setp.input_double_register_1 = 0
@@ -91,10 +91,10 @@ def order_to_queue(order):
     queue.append(bottom_cover_approach[order[1]])
     queue.append(bottom_cover_pos[order[1]])
     queue.append(bottom_cover_approach[order[1]])
-    queue.append(bottom_cover_approach[0])
-    queue.append(bottom_cover_pos[0])
+
+    #End pos
+    queue.append(end_pos)
     queue.append("r") #release
-    queue.append(bottom_cover_approach[0])
 
     return queue
 
@@ -112,52 +112,23 @@ def grab(id): # 0=close, 1=small, 2=large
         gripper.standard_digital_output = 0b01010000 
     con.send(gripper)
 
-# ---------- robot movement ---------- #
-def move(state):
-    #If move was completed, start new move
-    if move_completed and state.output_int_register_0 == 1:
-        move_completed = False
-        
-        if queue[current_task] == "l":
-            grab(2)
-            time.sleep(0.4)
-        elif queue[current_task] == "s":
-            grab(1)
-            time.sleep(0.4)
-        elif queue[current_task] == "r":
-            grab(0)
-            time.sleep(0.4)
-        else:
-            list_to_setp(setp, queue[current_task])
-            con.send(setp)
-        current_task += 1
-        watchdog.input_int_register_0 = 1
-    
-    #If output_int_register_0 is 0, the robot has finished moving. Mark the move as finished.
-    elif not move_completed and state.output_int_register_0 == 0:
-        move_completed = True
-        watchdog.input_int_register_0 = 0
-
-    #Check if the queue has been finished.
-    if current_task >= len(queue):
-        order_completed = True
-
 # ---------- startup ---------- #
 #Get orders from database
 orders = [
     [0, 1, 2],
-    [2, 1, 1]
+    [0, 2, 1],
+    [0, 0, 0]
 ]
-
-#Convert to queue of movements
-queue = order_to_queue(orders[0])
 
 #Init variables
 paused = True
 order_completed = False
 move_completed = True
 current_task = 0
-start_time = time.time()
+current_order = 0
+
+#Convert to queue of movements
+queue = order_to_queue(orders[current_order])
 
 power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
 
@@ -178,14 +149,50 @@ while True:
     if paused == True:
         if keyboard.is_pressed('space'):
             paused = False
+            start_time = time.time()
     else: #If not paused, move the robot.
         if order_completed == True:
             #Load next order
             print("Order completed")
-            order_completed = False
+            current_order += 1
+            if(current_order >= len(orders)):
+                break
+            else:
+                queue = order_to_queue(orders[current_order])
+                current_task = 0
+                order_completed = False
         else:
-            move(state)
+            # log the power
             power_log_file.write(f'{time.time()-start_time} {state.actual_robot_voltage} {state.actual_robot_current} {state.actual_robot_voltage*state.actual_robot_current}\n')
+            
+            #Check if the queue has been finished.
+            if current_task >= len(queue):
+                order_completed = True
+
+            # ---------- Move the robot ---------- #
+            #If move was completed, start new move
+            elif move_completed and state.output_int_register_0 == 1:
+                print(f'Move {current_task} at time: {time.time()-start_time} is: {queue[current_task]}')
+                move_completed = False
+                
+                if queue[current_task] == "l":
+                    grab(2)
+                elif queue[current_task] == "s":
+                    grab(1)
+                elif queue[current_task] == "r":
+                    grab(0)
+                else:
+                    list_to_setp(setp, queue[current_task])
+                    con.send(setp)
+                current_task += 1
+                watchdog.input_int_register_0 = 1
+                #time.sleep(0.005)
+                continue
+            
+            #If output_int_register_0 is 0, the robot has finished moving. Mark the move as finished. Maybe idk how it works
+            elif not move_completed and state.output_int_register_0 == 0:
+                move_completed = True
+                watchdog.input_int_register_0 = 0
 
     #Send watchdog, so we don't lose connection.
     con.send(watchdog)
