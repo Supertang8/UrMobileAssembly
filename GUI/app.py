@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import time
 
 app = Flask(__name__)
 
@@ -6,10 +7,14 @@ app = Flask(__name__)
 order_list = []
 print("test")
 
+def get_time():
+    return time.time()
+
+
 # Route to render the index.html template
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', time=get_time())
 
 @app.route('/receive_order_list', methods=['POST'])
 def receive_order_list():
