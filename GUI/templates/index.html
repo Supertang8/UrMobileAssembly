@@ -1,6 +1,6 @@
 <body>
     <h1>Phone Order GUI</h1>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../static/style.css">
     <style></style>
     <hr>
 
@@ -38,6 +38,7 @@
             <h2>Order List</h2>
             <button id="deleteOrderListButton" onclick="deleteOrderList()">Delete Order List</button>
             <button id="deleteLastPhoneButton" onclick="deleteLastPhone()">Delete Last Phone</button>
+            <button id="sendOrderList" onclick="sendOrderListToServer()">Send order list</button>
             <table id="orderTable">
                 <thead>
                     <tr>
@@ -95,6 +96,21 @@
             
         });
 
+        function sendOrderListToServer() {
+            const orderListArray = getOrderListAsArray();
+
+            fetch('/receive_order_list', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderListArray)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+
         function getOrderListAsArray() {
             const orderListArray = [];
             const rows = orderListTableBody.querySelectorAll('tr');
@@ -124,7 +140,7 @@
 
         function getPhonePreviewImage(topCoverColor, bottomCoverColor, fuses) {
             // Replace the URL with the actual path to your photos
-            const photoPath = `combos/${topCoverColor}_${bottomCoverColor}_${fuses}.png`;
+            const photoPath = `../static/combos/${topCoverColor}_${bottomCoverColor}_${fuses}.png`;
             return photoPath;
         }
 
@@ -141,9 +157,11 @@
                 phoneNumber--;
             }
         }
-    
 
-        window.onload = updatePhonePreview;
+        window.onload = function() {
+            updatePhonePreview();
+            // add function here
+        };
 
     </script>
 </body>
