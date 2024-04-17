@@ -152,7 +152,7 @@ while True:
     state = con.receive()
     if state is None:
         break
-    
+    '''
     #Print State
     if time.time() - last_print_time > 1.0:
         if paused:
@@ -171,7 +171,7 @@ while True:
         else:
             print(f"POST request failed with status code: {response.status_code}")
 
-        last_print_time = time.time()
+        last_print_time = time.time()'''
 
     #If robot is paused, check for start signal.
     if paused == True:
