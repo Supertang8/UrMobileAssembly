@@ -21,7 +21,7 @@ ROBOT_HOST = "192.168.0.104"
 ROBOT_PORT = 30004
 config_filename = "control_loop_configuration.xml"
 
-power_log_file = open("power_log.txt", 'w')
+#power_log_file = open("power_log.txt", 'w')
 
 #logging.getLogger().setLevel(logging.INFO)
 
@@ -126,7 +126,7 @@ def print_state(state, paused):
         else:
             message = "Running"
         data = {"message": message}
-        requests.post('http://127.0.0.1/status', json=data)
+        requests.post('http://192.168.0.90/status', json=data)
         last_print_time = time.time()
 
 # ---------- controlling end-effector ---------- #
@@ -151,7 +151,7 @@ move_completed = True
 current_task = 0
 current_order = 0
 
-power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
+#power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
 
 #Start data synchronization
 if not con.send_start():
@@ -201,7 +201,7 @@ while True:
         #If the order has not yet been completed:
         else:
             # log the power
-            power_log_file.write(f'{time.time()-start_time} {state.actual_robot_voltage} {state.actual_robot_current} {state.actual_robot_voltage*state.actual_robot_current}\n')
+            #power_log_file.write(f'{time.time()-start_time} {state.actual_robot_voltage} {state.actual_robot_current} {state.actual_robot_voltage*state.actual_robot_current}\n')
             
             #Check if the queue has been finished.
             if current_task >= len(queue):
