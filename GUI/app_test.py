@@ -1,36 +1,19 @@
-from flask import Flask, render_template, request, jsonify
-import time
+import GUI.run_server as run_server
 import threading
+import time
 
-app = Flask(__name__)
+order_list_data = []
 
-# Define a list to store order list data
-order_list = []
-
-@app.route('/current_time')
-def current_time():
-    timestamp = time.time()
-    formatted_time = time.strftime('%H:%M:%S', time.localtime(timestamp)) + f":{int((timestamp % 1) * 1000):03d}"
-    return jsonify({'current_time': formatted_time})
-
-# Route to render the index.html template
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/receive_order_list', methods=['POST'])
-def receive_order_list():
-    order_list_data = request.json
-    # Process the order list data as needed
-    print(order_list_data)
-    return jsonify({'message': 'Data received successfully'})
+def change_global_variable(list):
+    global order_list_data
+    order_list_data = list
 
 def run_flask():
-    app.run(host="0.0.0.0", port=80)
+    run_server.run_server(change_global_variable)
 
 def print_test():
     while True:
-        print("test")
+        print(order_list_data)
         time.sleep(1)
 
 if __name__ == '__main__':
