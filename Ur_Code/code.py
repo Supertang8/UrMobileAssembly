@@ -126,7 +126,7 @@ def print_state(state, paused):
         else:
             message = "Running"
         data = {"message": message}
-        requests.post('http://192.168.0.90/status', json=data)
+        #requests.post('http://192.168.0.90/status', json=data)
         last_print_time = time.time()
 
 # ---------- controlling end-effector ---------- #
