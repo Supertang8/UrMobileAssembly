@@ -30,7 +30,7 @@ def run_server(callback_function):
     @app.route('/status', methods=['GET', 'POST'])
     def status_get():
         
-        global status
+        nonlocal status
 
         if request.method == "GET":
             return jsonify({'status': status})
