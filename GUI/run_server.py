@@ -30,15 +30,26 @@ def run_server(callback_function):
     @app.route('/receive_order_list', methods=['POST'])
     def receive_order_list():
         order_list_data = request.json
-
         for order in order_list_data:
-            for element in order:
-                if element == "black":
-                    element = 0
-                elif element == "white":
-                    element = 1
-                elif element == "blue":
-                    element = 2
+            new_order = []
+            new_order.append(int(order[3]))
+
+            if order[2] == "black":
+                new_order.append(0)
+            elif order[2] == "white":
+                new_order.append(1)
+            else:
+                new_order.append(2)
+            
+            if order[1] == "black":
+                new_order.append(0)
+            elif order[1] == "white":
+                new_order.append(1)
+            else:
+                new_order.append(2)
+            
+            order = new_order
+
 
         callback_function(order_list_data)
         # Process the order list data as needed
