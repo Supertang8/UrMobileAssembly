@@ -10,7 +10,7 @@ import time
 #import keyboard
 import threading
 import requests
-from ..GUI import run_server
+from GUI import run_server
 
 #from TestingCode import rx, ry, rz
 from find_positions import top_cover_pos, top_cover_approach, bottom_cover_pos, bottom_cover_approach, fuse_pos, fuse_approach, pcb_pos, pcb_approach, bottom_cover_drop, fixture_test_pos
@@ -60,18 +60,19 @@ watchdog.input_int_register_0 = 0
 
 # ---------- GUI server ---------- #
 
-#function for running GUI script.
-def run_gui_script():
-    run_server.run_server(get_order_data) #Send the callback function get_order_data as an argument, which can then be run by the run_server script.
-
-#start a thread running run_gui_script() in parallel with this script. 
-gui_thread = threading.thread(target=run_gui_script)
-
 #Get orders from running script.
 orders = []
 def get_order_data(order_data):
     global orders
     orders = order_data
+
+#function for running GUI script.
+def run_gui_script():
+    run_server.run_server(get_order_data) #Send the callback function get_order_data as an argument, which can then be run by the run_server script.
+
+#start a thread running run_gui_script() in parallel with this script. 
+gui_thread = threading.Thread(target=run_gui_script)
+gui_thread.start()
 
 # ---------- utility functions ---------- #
 def setp_to_list(sp):
@@ -156,12 +157,13 @@ while True:
         message = "Idle"
     else:
         message = "Running"
-    data = {"message", message}
-    requests.post('http://127.0.0.1/status', json=data)
+    data = {"message": message}
+    #requests.post('http://127.0.0.1/status', json=data)
 
     #If robot is paused, check for start signal.
     if paused == True:
         if orders != []:
+            print(f'Order(s) recieved: {orders}')
             paused = False
             queue = order_to_queue(orders[current_order])#Convert to queue of movements
             start_time = time.time()

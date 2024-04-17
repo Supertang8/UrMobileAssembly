@@ -30,6 +30,7 @@ def run_server(callback_function):
     @app.route('/receive_order_list', methods=['POST'])
     def receive_order_list():
         order_list_data = request.json
+        new_order_list = []
         for order in order_list_data:
             new_order = []
             new_order.append(int(order[3]))
@@ -48,12 +49,11 @@ def run_server(callback_function):
             else:
                 new_order.append(2)
             
-            order = new_order
+            new_order_list.append(new_order)
 
-
-        callback_function(order_list_data)
+        callback_function(new_order_list)
         # Process the order list data as needed
-        print(order_list_data)
+        print(new_order_list)
         return jsonify({'message': 'Data received successfully'})
 
     #if __name__ == '__main__':
