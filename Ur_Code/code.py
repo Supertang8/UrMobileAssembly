@@ -156,7 +156,8 @@ while True:
         message = "Idle"
     else:
         message = "Running"
-    requests.post('http://127.0.0.1/status', json=message)
+    data = {"message", message}
+    requests.post('http://127.0.0.1/status', json=data)
 
     #If robot is paused, check for start signal.
     if paused == True:
