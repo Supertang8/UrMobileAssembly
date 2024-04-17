@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import time
 
 app = Flask(__name__)
-status = "test"
+status = ""
 
 # Define a list to store order list data
 order_list = []
