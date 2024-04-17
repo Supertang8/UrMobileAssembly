@@ -160,7 +160,17 @@ while True:
         else:
             message = "Running"
         data = {"message": message}
-        requests.post('http://192.168.0.90/status', json=data)
+        
+        url = 'http://192.168.0.90/status'
+        # Send the POST request with JSON data
+        response = requests.post(url, json=data)
+
+        # Check the response status
+        if response.status_code == 200:
+            print("POST request successful.")
+        else:
+            print(f"POST request failed with status code: {response.status_code}")
+
         last_print_time = time.time()
 
     #If robot is paused, check for start signal.
