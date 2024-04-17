@@ -117,6 +117,17 @@ def order_to_queue(order):
 
     return queue
 
+last_print_time = 0.0
+def print_state(state, paused):
+    if time.time() - last_print_time > 1.0:
+        if paused:
+            message = "Idle"
+        else:
+            message = "Running"
+        data = {"message": message}
+        requests.post('http://127.0.0.1/status', json=data)
+        last_print_time = time.time()
+
 # ---------- controlling end-effector ---------- #
 def grab(id): # 0=close, 1=small, 2=large
     gripper.standard_digital_output_mask = 0b01111000 #Mask the 4 digital outputs we are changing.
@@ -153,12 +164,7 @@ while True:
         break
     
     #Print State
-    if paused:
-        message = "Idle"
-    else:
-        message = "Running"
-    data = {"message": message}
-    #requests.post('http://127.0.0.1/status', json=data)
+    print_state(state, paused)
 
     #If robot is paused, check for start signal.
     if paused == True:
