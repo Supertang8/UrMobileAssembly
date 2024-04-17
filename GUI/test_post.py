@@ -5,7 +5,8 @@ import time
 url = 'http://127.0.0.1/status'
 
 # Define the data you want to send
-data = {"message": "idle"}
+status = "running"
+data = {"message": status}
 
 # Define the interval in seconds
 interval = 1
