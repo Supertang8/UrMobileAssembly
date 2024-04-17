@@ -3,8 +3,8 @@ def run_server(callback_function):
     from flask import Flask, render_template, request, jsonify
     import time
 
-    app = Flask(__name__)
-    status = ""
+    app = Flask(__name__)   
+    status = "placeholder"
 
     # Define a list to store order list data
     order_list = []
