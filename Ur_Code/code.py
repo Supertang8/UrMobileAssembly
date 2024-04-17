@@ -7,7 +7,10 @@ sys.path.append("..")
 import rtde.rtde as rtde
 import rtde.rtde_config as rtde_config
 import time
-import keyboard
+#import keyboard
+import threading
+import requests
+from ..GUI import run_server
 
 #from TestingCode import rx, ry, rz
 from find_positions import top_cover_pos, top_cover_approach, bottom_cover_pos, bottom_cover_approach, fuse_pos, fuse_approach, pcb_pos, pcb_approach, bottom_cover_drop, fixture_test_pos
@@ -54,6 +57,21 @@ gripper.standard_digital_output_mask = 0
 
 #The function "rtde_set_watchdog" in the "rtde_control_loop.urp" creates a 1 Hz watchdog
 watchdog.input_int_register_0 = 0
+
+# ---------- GUI server ---------- #
+
+#function for running GUI script.
+def run_gui_script():
+    run_server.run_server(get_order_data) #Send the callback function get_order_data as an argument, which can then be run by the run_server script.
+
+#start a thread running run_gui_script() in parallel with this script. 
+gui_thread = threading.thread(target=run_gui_script)
+
+#Get orders from running script.
+orders = []
+def get_order_data(order_data):
+    global orders
+    orders = order_data
 
 # ---------- utility functions ---------- #
 def setp_to_list(sp):
@@ -113,22 +131,12 @@ def grab(id): # 0=close, 1=small, 2=large
     con.send(gripper)
 
 # ---------- startup ---------- #
-#Get orders from database
-orders = [
-    [0, 1, 2],
-    [0, 2, 1],
-    [0, 0, 0]
-]
-
 #Init variables
 paused = True
 order_completed = False
 move_completed = True
 current_task = 0
 current_order = 0
-
-#Convert to queue of movements
-queue = order_to_queue(orders[current_order])
 
 power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
 
@@ -144,23 +152,43 @@ while True:
         break
     
     #Print State
+    if paused:
+        message = "Idle"
+    else:
+        message = "Running"
+    requests.post('http://127.0.0.1/status', json=message)
 
     #If robot is paused, check for start signal.
     if paused == True:
-        if keyboard.is_pressed('space'):
+        if orders != []:
             paused = False
+            queue = order_to_queue(orders[current_order])#Convert to queue of movements
             start_time = time.time()
+
     else: #If not paused, move the robot.
+
+        #If an order has been completed:
         if order_completed == True:
-            #Load next order
             print("Order completed")
             current_order += 1
+
+            #If there are no more orders, reset variables and pause the robot.
             if(current_order >= len(orders)):
-                break
+                orders = []
+                paused = True
+                order_completed = False
+                move_completed = True
+                current_task = 0
+                current_order = 0
+                continue
+
+            #If there are more orders, load the next one.
             else:
                 queue = order_to_queue(orders[current_order])
                 current_task = 0
                 order_completed = False
+        
+        #If the order has not yet been completed:
         else:
             # log the power
             power_log_file.write(f'{time.time()-start_time} {state.actual_robot_voltage} {state.actual_robot_current} {state.actual_robot_voltage*state.actual_robot_current}\n')
