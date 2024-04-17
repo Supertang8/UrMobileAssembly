@@ -4,6 +4,7 @@ def run_server(callback_function):
     import time
 
     app = Flask(__name__)
+    status = ""
 
     # Define a list to store order list data
     order_list = []
