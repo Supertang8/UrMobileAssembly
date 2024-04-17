@@ -26,6 +26,20 @@ def run_server(callback_function):
     def waitingRobot():
         return render_template('waitingRobot.html')
 
+    @app.route('/status', methods=['GET', 'POST'])
+    def status_get():
+        
+        global status
+
+        if request.method == "GET":
+            return jsonify({'status': status})
+        
+        if request.method == "POST":
+            print("POST request received")
+            json_data = request.json
+            status = json_data.get('message')  # Extracting the value associated with the key 'message'
+            print("Received status:", status)
+            return jsonify({'status': "ok"})
 
     @app.route('/receive_order_list', methods=['POST'])
     def receive_order_list():
