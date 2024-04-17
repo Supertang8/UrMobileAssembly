@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centered GIF</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+    }
+    .container {
+        text-align: center;
+    }
+</style>
+<script>
+    // Function to fetch status from the server
+    function getStatus() {
+        fetch('/status')
+        .then(response => response.json())
+        .then(data => {
+            // Update the h1 with the fetched status
+            document.getElementById('status').innerText = data.status;
+        })
+        .catch(error => console.error('Error fetching status:', error));
+    }
+
+    // Fetch status every 250ms
+    setInterval(getStatus, 250);
+</script>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="status"></h1><br><br>
+    <img src="https://www.robotware.ro/images/giphy.gif" alt="Centered GIF">
+</div>
+
+</body>
+</html>

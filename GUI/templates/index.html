@@ -39,7 +39,7 @@
             <h2>The current time is : <span id="current-time"></span></h2>
             <button id="deleteOrderListButton" onclick="deleteOrderList()">Delete Order List</button>
             <button id="deleteLastPhoneButton" onclick="deleteLastPhone()">Delete Last Phone</button>
-            <button id="sendOrderList" onclick="sendOrderListToServer()">Send order list</button>
+            <button id="sendOrderList" onclick="sendOrderListToServer()">Send to robot</button>
             <table id="orderTable">
                 <thead>
                     <tr>
@@ -127,7 +127,11 @@
                 body: JSON.stringify(orderListArray)
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                console.log(data);
+                window.location.href = '/waiting_on_robot';
+                
+            })
             .catch(error => console.error('Error:', error));
         }
 
