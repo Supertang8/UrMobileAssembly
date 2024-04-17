@@ -119,6 +119,7 @@ def order_to_queue(order):
 
 last_print_time = 0.0
 def print_state(state, paused):
+    global last_print_time
     if time.time() - last_print_time > 1.0:
         if paused:
             message = "Idle"
