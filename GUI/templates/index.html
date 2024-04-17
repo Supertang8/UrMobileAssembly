@@ -18,16 +18,16 @@
 
                 <label for="bottomCoverColor">Bottom Color:</label>
                 <select id="bottomCoverColor" name="bottomCoverColor" onchange="updatePhonePreview()">
-                    <option value="0" selected>Black </option>
-                    <option value="1">White</option>
-                    <option value="2">Blue</option>
+                    <option value="black" selected>Black </option>
+                    <option value="white">White</option>
+                    <option value="blue">Blue</option>
                 </select>
 
                 <label for="topCoverColor">Top Color:</label>
                 <select id="topCoverColor" name="topCoverColor" onchange="updatePhonePreview()">
-                    <option value="0" selected>Black</option>
-                    <option value="1">White</option>
-                    <option value="2">Blue</option>
+                    <option value="black" selected>Black</option>
+                    <option value="white">White</option>
+                    <option value="blue">Blue</option>
                 </select>
         
                 <button type="submit">Add to Order</button>
@@ -103,7 +103,7 @@
                 bottomCoverColorCell.textContent = bottomCoverColor;
                 fusesCell.textContent = fuses;
 
-                // orderRow.appendChild(phoneNumberCell);
+                orderRow.appendChild(phoneNumberCell);
                 orderRow.appendChild(fusesCell);
                 orderRow.appendChild(bottomCoverColorCell);
                 orderRow.appendChild(topCoverColorCell);
