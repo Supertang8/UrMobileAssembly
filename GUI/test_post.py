@@ -2,7 +2,7 @@ import requests
 import time
 
 # Define the URL of the endpoint
-url = 'http://127.0.0.1/status'
+url = 'http://192.168.0.90/status'
 
 # Define the initial status
 status = "idle"

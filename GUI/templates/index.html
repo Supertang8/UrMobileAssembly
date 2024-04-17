@@ -8,25 +8,26 @@
         <div class="orderFormElement">
             <h2>Choose your options:</h2>
             <form id="orderForm">
-                <label for="topCoverColor">Top Color:</label>
-                <select id="topCoverColor" name="topCoverColor" onchange="updatePhonePreview()">
-                    <option value="black" selected>Black</option>
-                    <option value="white">White</option>
-                    <option value="blue">Blue</option>
-                </select>
-        
-                <label for="bottomCoverColor">Bottom Color:</label>
-                <select id="bottomCoverColor" name="bottomCoverColor" onchange="updatePhonePreview()">
-                    <option value="black" selected>Black </option>
-                    <option value="white">White</option>
-                    <option value="blue">Blue</option>
-                </select>
-        
+
                 <label for="fuses">Fuses:</label>
                 <select id="fuses" name="fuses" onchange="updatePhonePreview()">
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2" selected>2</option>
+                </select>
+
+                <label for="bottomCoverColor">Bottom Color:</label>
+                <select id="bottomCoverColor" name="bottomCoverColor" onchange="updatePhonePreview()">
+                    <option value="0" selected>Black </option>
+                    <option value="1">White</option>
+                    <option value="2">Blue</option>
+                </select>
+
+                <label for="topCoverColor">Top Color:</label>
+                <select id="topCoverColor" name="topCoverColor" onchange="updatePhonePreview()">
+                    <option value="0" selected>Black</option>
+                    <option value="1">White</option>
+                    <option value="2">Blue</option>
                 </select>
         
                 <button type="submit">Add to Order</button>
@@ -102,10 +103,10 @@
                 bottomCoverColorCell.textContent = bottomCoverColor;
                 fusesCell.textContent = fuses;
 
-                orderRow.appendChild(phoneNumberCell);
-                orderRow.appendChild(topCoverColorCell);
-                orderRow.appendChild(bottomCoverColorCell);
+                // orderRow.appendChild(phoneNumberCell);
                 orderRow.appendChild(fusesCell);
+                orderRow.appendChild(bottomCoverColorCell);
+                orderRow.appendChild(topCoverColorCell);
 
                 orderListTableBody.appendChild(orderRow);
                 console.log(getOrderListAsArray()); 

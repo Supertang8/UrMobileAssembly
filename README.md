@@ -14,7 +14,7 @@ User:   admin
 Pw      blank
 
 Raspberry pi:
-ip:     192.168.0.105
+ip:     192.168.0.90
 User:   admin
 PW:     admin
 
