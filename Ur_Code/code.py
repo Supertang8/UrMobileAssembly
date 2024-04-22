@@ -119,7 +119,7 @@ def order_to_queue(order):
 
 # ---------- controlling end-effector ---------- #
 def grab(id): # 0=close, 1=small, 2=large
-    gripper.standard_digital_output_mask = 0b01111000 #Mask the 4 digital outputs we are changing.
+    gripper.standard_digital_output_mask = 0b11110000 #Mask the 4 digital outputs we are changing.
     if(id == 2): 
         #Start large suction, set digital output 6 to HIGH
         gripper.standard_digital_output = 0b00100000 
@@ -128,7 +128,7 @@ def grab(id): # 0=close, 1=small, 2=large
         gripper.standard_digital_output = 0b10000000 
     else:
         ##Stop all suction, set digital output 5 and 7 to HIGH
-        gripper.standard_digital_output = 0b01010000 
+        gripper.standard_digital_output = 0b01010000
     con.send(gripper)
 
 # ---------- startup ---------- #
@@ -152,6 +152,7 @@ while True:
     state = con.receive()
     if state is None:
         break
+    print(f'ROBOT: Out: {state.output_int_register_0}   In: {state.input_int_register_0}')
     '''
     #Print State
     if time.time() - last_print_time > 1.0:
@@ -218,7 +219,6 @@ while True:
             elif move_completed and state.output_int_register_0 == 1:
                 print(f'Move {current_task} at time: {time.time()-start_time} is: {queue[current_task]}')
                 move_completed = False
-                
                 if queue[current_task] == "l":
                     grab(2)
                 elif queue[current_task] == "s":
@@ -230,13 +230,14 @@ while True:
                     con.send(setp)
                 current_task += 1
                 watchdog.input_int_register_0 = 1
+                print("PC: input reg: 1, Move_completed = False")
                 #time.sleep(0.005)
                 continue
             
-            #If output_int_register_0 is 0, the robot has finished moving. Mark the move as finished. Maybe idk how it works
             elif not move_completed and state.output_int_register_0 == 0:
                 move_completed = True
                 watchdog.input_int_register_0 = 0
+                print("PC: input reg: 0,  Move_completed = True")
 
     #Send watchdog, so we don't lose connection.
     con.send(watchdog)

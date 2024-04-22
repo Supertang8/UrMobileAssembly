@@ -8,7 +8,7 @@ def run_server(callback_function):
 
     # Define a list to store order list data
     order_list = []
-    print("test")
+    #print("test")
 
     @app.route('/current_time')
     def current_time():
@@ -36,10 +36,10 @@ def run_server(callback_function):
             return jsonify({'status': status})
         
         if request.method == "POST":
-            print("POST request received")
+            #print("POST request received")
             json_data = request.json
             status = json_data.get('message')  # Extracting the value associated with the key 'message'
-            print("Received status:", status)
+            #print("Received status:", status)
             return jsonify({'status': "ok"})
 
     @app.route('/receive_order_list', methods=['POST'])
@@ -68,9 +68,9 @@ def run_server(callback_function):
 
         callback_function(new_order_list)
         # Process the order list data as needed
-        print(new_order_list)
+        #print(new_order_list)
         return jsonify({'message': 'Data received successfully'})
 
     #if __name__ == '__main__':
 
-    app.run(host="0.0.0.0", port=80)
+    app.run(host="0.0.0.0", port=80, debug=False)

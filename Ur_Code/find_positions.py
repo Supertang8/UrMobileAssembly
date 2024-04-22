@@ -1,6 +1,9 @@
 import math
 import numpy as np
 
+fuse_y_offset = -0.001
+fuse_x_offset = -0.001
+
 roty30 = np.array([
     [np.cos(np.deg2rad(30)), 0, np.sin(np.deg2rad(30)), 0],
     [0, 1, 0, 0],
@@ -11,12 +14,6 @@ rotx180 = np.array([
     [1, 0, 0, 0],
     [0, np.cos(np.pi), -np.sin(np.pi), 0],
     [0, np.sin(np.pi), np.cos(np.pi), 0],
-    [0, 0, 0, 1]
-])
-small_suck = np.array([#######################################################################################3
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
     [0, 0, 0, 1]
 ])
 fixture_pos_roboDK = np.array([
@@ -38,6 +35,12 @@ approach = np.array([
     [0, 0, 1, -0.05],
     [0, 0, 0, 1]
 ])
+fuse_pickup = np.array([
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0.0125],
+    [0, 0, 0, 1]
+])
 top_pickup = np.array([
     [1, 0, 0, 0],
     [0, 1, 0, 0],
@@ -53,7 +56,7 @@ bottom_pickup = np.array([
 bottom_dropin = np.array([
     [1, 0, 0, 0],
     [0, 1, 0, 0],
-    [0, 0, 1, 0.007],
+    [0, 0, 1, 0.008],
     [0, 0, 0, 1]
 ])
 pcb_pickup = np.array([
@@ -64,45 +67,58 @@ pcb_pickup = np.array([
 ])
 t = [
     np.array([
-    [1, 0, 0, -0.0384 - 0.04916*2],
-    [0, 1, 0, 0.06325],
+    [1, 0, 0, -0.0384 - 0.04916*2 + fuse_x_offset],
+    [0, 1, 0, 0.06325 + fuse_y_offset],
     [0, 0, 1, 0.02332 + 0.05506*2],
     [0, 0, 0, 1]]),
 
     np.array([
-    [1, 0, 0, -0.0384 - 0.04916],
-    [0, 1, 0, 0.06325],
+    [1, 0, 0, -0.0384 - 0.04916 + fuse_x_offset],
+    [0, 1, 0, 0.06325 + fuse_y_offset],
     [0, 0, 1, 0.02332 + 0.05506],
     [0, 0, 0, 1]]),
 
     np.array([
-    [1, 0, 0, -0.0384],
-    [0, 1, 0, 0.06325],
+    [1, 0, 0, -0.0384 + fuse_x_offset],
+    [0, 1, 0, 0.06325 + fuse_y_offset],
     [0, 0, 1, 0.02332],
     [0, 0, 0, 1]])
 ]
 b = [
     np.array([
-    [1, 0, 0, -0.0384 - 0.04916*2],
-    [0, 1, 0, 0.06325 + 0.1205],
+    [1, 0, 0, -0.0384 - 0.04916*2 + fuse_x_offset],
+    [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
     [0, 0, 1, 0.02332 + 0.05506*2],
     [0, 0, 0, 1]]),
 
     np.array([
-    [1, 0, 0, -0.0384 - 0.04916],
-    [0, 1, 0, 0.06325 + 0.1205],
+    [1, 0, 0, -0.0384 - 0.04916 + fuse_x_offset],
+    [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
     [0, 0, 1, 0.02332 + 0.05506],
     [0, 0, 0, 1]]),
 
     np.array([
-    [1, 0, 0, -0.0384],
-    [0, 1, 0, 0.06325 + 0.1205],
+    [1, 0, 0, -0.0384 + fuse_x_offset],
+    [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
     [0, 0, 1, 0.02332],
     [0, 0, 0, 1]])
 ]
+f = [
+    np.array([
+        [1, 0, 0, -0.1152 -0.0045],
+        [0, 1, 0, 0.301 - 0.0003 + 0.013],
+        [0, 0, 1, 0.1277],
+        [0, 0, 0, 1]]),
+    
+    np.array([
+        [1, 0, 0, -0.1152 -0.0045],
+        [0, 1, 0, 0.301 - 0.0003],
+        [0, 0, 1, 0.1277],
+        [0, 0, 0, 1]])
+]
 pcb = np.array([
-    [1, 0, 0, -0.08513 -0.002],
-    [0, 1, 0, 0.30094 +0.001],
+    [1, 0, 0, -0.08513 -0.002 + fuse_x_offset],
+    [0, 1, 0, 0.30094 +0.001 + fuse_y_offset],
     [0, 0, 1, 0.07686],
     [0, 0, 0, 1]])
 
@@ -156,6 +172,10 @@ pcb_approach = matrix_to_angle_axis(pcb_matrix@approach)
 
 fuse_pos = []
 fuse_approach = []
+for matrix in f:
+    final_matrix = fixture_pos@matrix@roty30@fuse_pickup@rotx180
+    fuse_pos.append(matrix_to_angle_axis(final_matrix))
+    fuse_approach.append(matrix_to_angle_axis(final_matrix@approach))
 
 fixture_test_pos = matrix_to_angle_axis(fixture_pos@rotx180)
 
