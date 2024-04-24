@@ -5,6 +5,7 @@ Jacob,
 Simon,
 Nina,
 Vithuran,
+Jonas
 
 Vi bruger RTDE til at komunikere med UR5 robotten
 
