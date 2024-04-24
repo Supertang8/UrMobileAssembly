@@ -6,3 +6,8 @@ Simon,
 Nina,
 Vithuran,
 
+Vi bruger RTDE til at komunikere med UR5 robotten
+
+Vores GUI et en webside som bliver kørt som en python flask app
+
+Held og lykke
