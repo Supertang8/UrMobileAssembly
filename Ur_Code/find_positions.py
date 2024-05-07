@@ -122,11 +122,37 @@ pcb = np.array([
     [0, 0, 1, 0.07686],
     [0, 0, 0, 1]])
 
-c = np.array([
+c = [
+    np.array([
     [1, 0, 0, 0.08],
     [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
     [0, 0, 1, 0.005],
+    [0, 0, 0, 1]]),
+    
+    np.array([
+    [1, 0, 0, 0.08],
+    [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
+    [0, 0, 1, 0.005 + 0.02],
+    [0, 0, 0, 1]]),
+
+    np.array([
+    [1, 0, 0, 0.08],
+    [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
+    [0, 0, 1, 0.005 + 0.02 * 2],
+    [0, 0, 0, 1]]),
+
+    np.array([
+    [1, 0, 0, 0.08],
+    [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
+    [0, 0, 1, 0.005 + 0.02 * 3],
+    [0, 0, 0, 1]]),
+
+    np.array([
+    [1, 0, 0, 0.08],
+    [0, 1, 0, 0.06325 + 0.1205 + fuse_y_offset],
+    [0, 0, 1, 0.005 + 0.02 * 4],
     [0, 0, 0, 1]])
+]
 
 def matrix_to_angle_axis(T):
     #Cut out rotation matrix from transformation matrix
@@ -183,13 +209,13 @@ for matrix in f:
     fuse_pos.append(matrix_to_angle_axis(final_matrix))
     fuse_approach.append(matrix_to_angle_axis(final_matrix@approach))
 
-completed_pile_matrix = fixture_pos@c
 completed_pile = []
-for i in range(0, 5):
-    completed_pile.append(matrix_to_angle_axis(completed_pile_matrix@np.power(bottom_pickup,i)@rotx180))
 completed_approach = []
-for i in range(0, 5):
-    completed_approach.append(matrix_to_angle_axis(completed_pile_matrix@np.power(bottom_pickup,i)@rotx180@approach))
+for matrix in c:
+    final_matrix = fixture_pos@matrix@rotx180
+    completed_pile.append(matrix_to_angle_axis(final_matrix))
+    completed_approach.append(matrix_to_angle_axis(final_matrix@approach))
+
 fixture_test_pos = matrix_to_angle_axis(fixture_pos@rotx180)
 
 print("Positions were calculated")
