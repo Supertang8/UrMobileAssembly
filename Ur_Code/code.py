@@ -137,7 +137,7 @@ current_task = 0
 current_order = 0
 last_print_time = 0.0
 phone_start_time = 0
-
+waiting_for_order_printed = False
 #power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
 
 #Start data synchronization
@@ -153,9 +153,12 @@ while True:
 
     #If robot is paused, check for start signal.
     if paused == True:
-        print("waiting for order")
+        if waiting_for_order_printed == False:
+            waiting_for_order_printed = True
+            print("waiting for order")
         if orders != []:
-            print(f'Order(s) recieved: {orders}')
+            waiting_for_order_printed = False
+            print(f'Order(s) received: {orders}')
             paused = False
             queue = order_to_queue(orders[current_order])#Convert to queue of movements
             start_time = time.time()
@@ -199,7 +202,7 @@ while True:
                 #print(f'Move {current_task} at time: {time.time()-start_time} is: {queue[current_task]}')
                 if(current_task == 1):
                     phone_start_time = time.time()
-                    
+
                 move_completed = False
                 if queue[current_task] == "l":
                     grab(2)
