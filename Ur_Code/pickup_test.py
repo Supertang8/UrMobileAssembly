@@ -110,8 +110,9 @@ def order_to_queue(order): #order = [fuse(0-2), bottom_cover(0-2), top_cover(0-2
 
     return queue
 
-orders = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
+orders = []
+for i in range(0, 90):
+    orders.append([1])
 # ---------- controlling end-effector ---------- #
 def grab(id): # 0=close, 1=small, 2=large
     gripper.standard_digital_output_mask = 0b11110000 #Mask the 4 digital outputs we are changing.
