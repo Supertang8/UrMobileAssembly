@@ -152,7 +152,7 @@ while True:
     state = con.receive()
     if state is None:
         break
-    print(f'ROBOT: Out: {state.output_int_register_0}   In: {state.input_int_register_0}')
+    #print(f'ROBOT: Out: {state.output_int_register_0}   In: {state.input_int_register_0}')
     '''
     #Print State
     if time.time() - last_print_time > 1.0:
@@ -176,6 +176,7 @@ while True:
 
     #If robot is paused, check for start signal.
     if paused == True:
+        print("waiting for order")
         if orders != []:
             print(f'Order(s) recieved: {orders}')
             paused = False
@@ -217,7 +218,7 @@ while True:
             # ---------- Move the robot ---------- #
             #If move was completed, start new move
             elif move_completed and state.output_int_register_0 == 1:
-                print(f'Move {current_task} at time: {time.time()-start_time} is: {queue[current_task]}')
+                #print(f'Move {current_task} at time: {time.time()-start_time} is: {queue[current_task]}')
                 move_completed = False
                 if queue[current_task] == "l":
                     grab(2)
@@ -230,14 +231,14 @@ while True:
                     con.send(setp)
                 current_task += 1
                 watchdog.input_int_register_0 = 1
-                print("PC: input reg: 1, Move_completed = False")
+                #print("PC: input reg: 1, Move_completed = False")
                 #time.sleep(0.005)
                 continue
             
             elif not move_completed and state.output_int_register_0 == 0:
                 move_completed = True
                 watchdog.input_int_register_0 = 0
-                print("PC: input reg: 0,  Move_completed = True")
+                #print("PC: input reg: 0,  Move_completed = True")
 
     #Send watchdog, so we don't lose connection.
     con.send(watchdog)
