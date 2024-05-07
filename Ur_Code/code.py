@@ -14,7 +14,7 @@ from find_positions import top_cover_pos, top_cover_approach, bottom_cover_pos, 
 
 # ---------- configure robot & communications ---------- #
 # logging.basicConfig(level=logging.INFO)
-ROBOT_HOST = "192.168.56.101"
+ROBOT_HOST = "192.168.0.104"
 ROBOT_PORT = 30004
 config_filename = "control_loop_configuration.xml"
 
