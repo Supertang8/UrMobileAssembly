@@ -164,7 +164,7 @@ while True:
             start_time = time.time()
 
     else: #If not paused, move the robot.
-        print("assembling phone")
+        #print("assembling phone")
 
         #If an order has been completed:
         if order_completed == True:
@@ -177,7 +177,7 @@ while True:
                 orders = []
                 paused = True
                 order_completed = False
-                move_completed = True
+                move_completed = False
                 current_task = 0
                 current_order = 0
                 continue
