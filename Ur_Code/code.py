@@ -152,27 +152,6 @@ while True:
     state = con.receive()
     if state is None:
         break
-    #print(f'ROBOT: Out: {state.output_int_register_0}   In: {state.input_int_register_0}')
-    '''
-    #Print State
-    if time.time() - last_print_time > 1.0:
-        if paused:
-            message = "Idle"
-        else:
-            message = "Running"
-        data = {"message": message}
-        
-        url = 'http://192.168.0.90/status'
-        # Send the POST request with JSON data
-        response = requests.post(url, json=data)
-
-        # Check the response status
-        if response.status_code == 200:
-            print("POST request successful.")
-        else:
-            print(f"POST request failed with status code: {response.status_code}")
-
-        last_print_time = time.time()'''
 
     #If robot is paused, check for start signal.
     if paused == True:
@@ -192,6 +171,7 @@ while True:
 
             #If there are no more orders, reset variables and pause the robot.
             if(current_order >= len(orders)):
+                print("All orders completed")
                 orders = []
                 paused = True
                 order_completed = False
