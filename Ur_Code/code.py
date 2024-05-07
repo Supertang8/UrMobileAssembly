@@ -136,6 +136,7 @@ move_completed = True
 current_task = 0
 current_order = 0
 last_print_time = 0.0
+phone_start_time = 0
 
 #power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
 
@@ -163,7 +164,7 @@ while True:
 
         #If an order has been completed:
         if order_completed == True:
-            print("Order completed")
+            print(f'Order {orders[current_order]} completed in {time.time()-phone_start_time} s')
             current_order += 1
 
             #If there are no more orders, reset variables and pause the robot.
@@ -196,6 +197,9 @@ while True:
             #If move was completed, start new move
             elif move_completed and state.output_int_register_0 == 1:
                 #print(f'Move {current_task} at time: {time.time()-start_time} is: {queue[current_task]}')
+                if(current_task == 1):
+                    phone_start_time = time.time()
+                    
                 move_completed = False
                 if queue[current_task] == "l":
                     grab(2)
