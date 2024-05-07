@@ -5,25 +5,10 @@ Jacob,
 Simon,
 Nina,
 Vithuran,
+Jonas
 
-UR5_264 wifi
-password: 264462....    
+Vi bruger RTDE til at komunikere med UR5 robotten
 
-Dlink accespoint
-User:   admin
-Pw      blank
+Vores GUI et en webside som bliver kørt som en python flask app
 
-Raspberry pi:
-ip:     192.168.0.90
-User:   admin
-PW:     admin
-
-PostgreSQL
-ip:     192.168.0.105:5432
-user:   postgres
-PW:     admin
-
-Portainer
-pi      192.168.0.105:9443
-User:   admin
-PW:     adminadminadmin
+Held og lykke
