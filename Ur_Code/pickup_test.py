@@ -66,21 +66,21 @@ def list_to_setp(sp, list):
 
 def order_to_queue(order): #order = [fuse(0-2), bottom_cover(0-2), top_cover(0-2)]
     queue = []
-    queue.append(fuse_approach[1])
-    queue.append(fuse_pos[1])
+    queue.append(fuse_approach[0])
+    queue.append(fuse_pos[0])
     queue.append("s")
-    queue.append(fuse_approach[1])
-    queue.append(fuse_pos[1])
+    queue.append(fuse_approach[0])
+    queue.append(fuse_pos[0])
     queue.append("r")
-    queue.append(fuse_approach[1])
+    queue.append(fuse_approach[0])
 
-    queue.append(fuse_approach[2])
-    queue.append(fuse_pos[2])
+    queue.append(fuse_approach[1])
+    queue.append(fuse_pos[1])
     queue.append("s")
-    queue.append(fuse_approach[2])
-    queue.append(fuse_pos[2])
+    queue.append(fuse_approach[1])
+    queue.append(fuse_pos[1])
     queue.append("r")
-    queue.append(fuse_approach[2])
+    queue.append(fuse_approach[1])
 
     queue.append(pcb_approach)
     queue.append(pcb_pos)
