@@ -4,13 +4,12 @@ def run_server(callback_function):
     import time
 
     app = Flask(__name__)   
-    status = "placeholder"
+    status = "Assembling your order"
 
     # Define a list to store order list data
     order_list = []
     #print("test")
 
-    @app.route('/current_time')
     def current_time():
         timestamp = time.time()
         formatted_time = time.strftime('%H:%M:%S', time.localtime(timestamp)) + f":{int((timestamp % 1) * 1000):03d}"

@@ -26,6 +26,8 @@
     }
 </style>
 <script>
+
+    /*
     // Function to fetch status from the server
     function getStatus() {
         fetch('/status')
@@ -46,8 +48,13 @@
 
     // Fetch status every 250ms
     setInterval(getStatus, 250);
-
-    
+    */
+   // Function to return to the root URL
+   
+   function returnToRoot() {
+        window.location.href = '/';
+    }
+   
 
 </script>
 </head>
@@ -60,6 +67,7 @@
     </div>
     <h2>Please wait until the order is finnished</h2><br><br>
     <img src="../static/photos/UR_5_GIF.gif" alt="Centered GIF">
+    <button onclick="returnToRoot()">Return to Home</button><br><br>
 </div>
 
 </body>
