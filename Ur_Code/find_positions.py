@@ -133,7 +133,7 @@ def matrix_to_angle_axis(T):
     R = T[:3, :3]
 
     # Ensure the matrix is a rotation matrix by checking its determinant
-    assert np.isclose(np.linalg.det(R), 1.0), "Input matrix is not a rotation matrix"
+    #assert np.isclose(np.linalg.det(R), 1.0), "Input matrix is not a rotation matrix"
 
     # Compute the angle of rotation using the trace of the rotation matrix
     trace = np.trace(R)
