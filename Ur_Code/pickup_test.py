@@ -92,10 +92,10 @@ def order_to_queue(order): #order = [fuse(0-2), bottom_cover(0-2), top_cover(0-2
 
     for i in range(0, 3):
         queue.append(bottom_cover_approach[i])
-        queue.append(bottom_cover_drop[i])
+        queue.append(bottom_cover_pos[i])
         queue.append("l")
         queue.append(bottom_cover_approach[i])
-        queue.append(bottom_cover_drop[i])
+        queue.append(bottom_cover_pos[i])
         queue.append("r")
         queue.append(bottom_cover_approach[i])
 
