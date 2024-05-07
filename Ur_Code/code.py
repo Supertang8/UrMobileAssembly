@@ -7,12 +7,9 @@ sys.path.append("..")
 import rtde.rtde as rtde
 import rtde.rtde_config as rtde_config
 import time
-#import keyboard
 import threading
-import requests
 from GUI import run_server
 
-#from TestingCode import rx, ry, rz
 from find_positions import top_cover_pos, top_cover_approach, bottom_cover_pos, bottom_cover_approach, fuse_pos, fuse_approach, pcb_pos, pcb_approach, bottom_cover_drop, fixture_test_pos
 
 # ---------- configure robot & communications ---------- #
