@@ -186,10 +186,10 @@ for matrix in f:
 completed_pile_matrix = fixture_pos@c
 completed_pile = []
 for i in range(0, 5):
-    completed_pile.append(matrix_to_angle_axis(completed_pile_matrix@(bottom_pickup*i)))
+    completed_pile.append(matrix_to_angle_axis(completed_pile_matrix@np.power(bottom_pickup,i)@rotx180))
 completed_approach = []
 for i in range(0, 5):
-    completed_approach.append(matrix_to_angle_axis(completed_pile_matrix@(bottom_pickup*i)@approach))
+    completed_approach.append(matrix_to_angle_axis(completed_pile_matrix@np.power(bottom_pickup,i)@rotx180@approach))
 fixture_test_pos = matrix_to_angle_axis(fixture_pos@rotx180)
 
 print("Positions were calculated")
