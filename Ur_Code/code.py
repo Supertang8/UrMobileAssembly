@@ -10,7 +10,7 @@ import time
 import threading
 from GUI import run_server
 
-from find_positions import top_cover_pos, top_cover_approach, bottom_cover_pos, bottom_cover_approach, fuse_pos, fuse_approach, pcb_pos, pcb_approach, bottom_cover_drop, fixture_test_pos
+from find_positions import top_cover_pos, top_cover_approach, bottom_cover_pos, bottom_cover_approach, fuse_pos, fuse_approach, pcb_pos, pcb_approach, bottom_cover_drop, fixture_test_pos, completed_pile, completed_approach
 
 # ---------- configure robot & communications ---------- #
 # logging.basicConfig(level=logging.INFO)
@@ -83,7 +83,7 @@ def list_to_setp(sp, list):
         sp.__dict__["input_double_register_%i" % i] = list[i]
     return sp
 
-def order_to_queue(order):
+def order_to_queue(order, orderID):
     queue = []
 
     if order[0] != 0: #if the order contains at least one fuse
@@ -109,7 +109,8 @@ def order_to_queue(order):
     queue.append(bottom_cover_approach[order[1]])
 
     #End pos
-    queue.append(end_pos)
+    queue.append(completed_approach[orderID])
+    queue.append(completed_pile[orderID])
     queue.append("r") #release
 
     return queue
@@ -160,7 +161,7 @@ while True:
             waiting_for_order_printed = False
             print(f'Order(s) received: {orders}')
             paused = False
-            queue = order_to_queue(orders[current_order])#Convert to queue of movements
+            queue = order_to_queue(orders[current_order], current_order)#Convert to queue of movements
             start_time = time.time()
 
     else: #If not paused, move the robot.
@@ -184,7 +185,7 @@ while True:
 
             #If there are more orders, load the next one.
             else:
-                queue = order_to_queue(orders[current_order])
+                queue = order_to_queue(orders[current_order], current_order)
                 current_task = 0
                 order_completed = False
         
