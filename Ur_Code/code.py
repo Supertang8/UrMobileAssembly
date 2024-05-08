@@ -174,7 +174,7 @@ while True:
 
             #If there are no more orders, reset variables and pause the robot.
             if(current_order >= len(orders)):
-                print("All orders completed")
+                print(f'All {current_order} orders completed in {time.time()-start_time} s, Average: {(time.time()-start_time)/current_order} s')
                 orders = []
                 paused = True
                 order_completed = False
