@@ -19,6 +19,8 @@ ROBOT_PORT = 30004
 config_filename = "control_loop_configuration.xml"
 
 #power_log_file = open("power_log.txt", 'w')
+joint_pos_log_file = open("joint_pos_log.txt", 'w')
+assembly_log_file = open("assembly_time_log.txt", 'w')
 
 #logging.getLogger().setLevel(logging.INFO)
 
@@ -139,7 +141,6 @@ current_order = 0
 last_print_time = 0.0
 phone_start_time = 0
 waiting_for_order_printed = False
-#power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
 
 #Start data synchronization
 if not con.send_start():
@@ -158,6 +159,10 @@ while True:
             waiting_for_order_printed = True
             print("waiting for order")
         if orders != []:
+            #power_log_file = open("power_log.txt", 'w')
+            #power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
+            assembly_log_file.write('Order Completion_time[s]')
+            joint_pos_log_file.write('Time[s] Joint_pos Joint_vel Joint_acc')
             waiting_for_order_printed = False
             print(f'Order(s) received: {orders}')
             paused = False
@@ -170,6 +175,7 @@ while True:
         #If an order has been completed:
         if order_completed == True:
             print(f'Order {orders[current_order]} completed in {time.time()-phone_start_time} s')
+            assembly_log_file.write((f'{orders[current_order]} {time.time()-phone_start_time}'))
             current_order += 1
 
             #If there are no more orders, reset variables and pause the robot.
@@ -191,9 +197,10 @@ while True:
         
         #If the order has not yet been completed:
         else:
-            # log the power
+            # log the power and values
             #power_log_file.write(f'{time.time()-start_time} {state.actual_robot_voltage} {state.actual_robot_current} {state.actual_robot_voltage*state.actual_robot_current}\n')
-            
+            joint_pos_log_file.write(f'{time.time()-start_time} {state.actual_q} {state.actual_qd} {state.actual_qdd}')
+
             #Check if the queue has been finished.
             if current_task >= len(queue):
                 order_completed = True
