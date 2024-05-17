@@ -161,9 +161,8 @@ while True:
         if orders != []:
             #power_log_file = open("power_log.txt", 'w')
             #joint_pos_log_file = open("joint_pos_log.txt", 'w')
-            assembly_log_file = open("assembly_time_log.txt", 'w')
             #power_log_file.write('Time[s] Voltage[V] Current[A] Power[W]\n')
-            assembly_log_file.write('Order Completion_time[s]\n')
+            assembly_log_file.write('Fuses Bottom_colour Top_colour Completion_time[s]\n')
             #joint_pos_log_file.write('Time[s]:actual_joint_pos:actual_joint_vel:target_joint_pos:target_joint_vel:target_joint_acc\n')
             waiting_for_order_printed = False
             print(f'Order(s) received: {orders}')
@@ -177,7 +176,7 @@ while True:
         #If an order has been completed:
         if order_completed == True:
             print(f'Order {orders[current_order]} completed in {time.time()-phone_start_time} s')
-            assembly_log_file.write((f'{current_order} {time.time()-phone_start_time}\n'))
+            assembly_log_file.write((f'{orders[current_order][0]} {orders[current_order][1]} {orders[current_order][2]} {time.time()-phone_start_time}\n'))
             current_order += 1
 
             #If there are no more orders, reset variables and pause the robot.
