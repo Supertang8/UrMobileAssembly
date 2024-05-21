@@ -21,9 +21,7 @@ Held og lykke
 --How to enter virtual environment--: 
 First enter the Ur_Code folder in the terminal.
 
-    WINDOWS:
-Set-ExecutionPolicy Unrestricted -Scope Process
-.venv\Scripts\activate
+    WINDOWS: Set-ExecutionPolicy Unrestricted -Scope Process
+    WINDOWS: .venv\Scripts\activate
 
-    raspberryPI:
-source .venv/Scripts/activate
+    raspberryPI: source .venv/Scripts/activate
