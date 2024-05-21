@@ -1,4 +1,4 @@
-from post_script import post_status
+from GUI.Utility_and_Test.post_script import post_status
 import time
 import subprocess
 
